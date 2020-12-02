@@ -1,8 +1,7 @@
 const Barn = new Map()
 
 class Animal {
-  constructor(type, id) {
-    this.type = type
+  constructor(id) {
     this.id = id
   }
 
@@ -22,8 +21,9 @@ class Animal {
 }
 
 class Chicken extends Animal {
-  constructor(...args) {
-    super(...args)
+  constructor(id) {
+    super(id)
+    this.type = 'chicken'
   }
 
   getProduct() {
@@ -32,8 +32,9 @@ class Chicken extends Animal {
 }
 
 class Cow extends Animal {
-  constructor(...args) {
-    super(...args)
+  constructor(id) {
+    super(id)
+    this.type = 'cow'
   }
 
   getProduct() {
@@ -45,9 +46,9 @@ class Cow extends Animal {
 function addDefaultAnimals() {
   for(let i = 0; i < 20; i++) {
     if (i%2 === 0) {
-      new Cow('cow', Barn.size).save()
+      new Cow(Barn.size).save()
     }
-    new Chicken('chicken', Barn.size).save()
+    new Chicken(Barn.size).save()
   }
 }
 
