@@ -1,2 +1,4 @@
-<h1>OOP Farm</h1>
-<h3>Uncle Bob's farm implemented in the OOP paradigm.</h3>
+#OOP Farm
+###Uncle Bob's farm implemented in the OOP paradigm.
+
+Calculate the total number of products collected - `node index.js`
