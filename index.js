@@ -10,22 +10,23 @@ function random([min, max]) {
   return parseInt(Math.random() * (max - min + 1) + min)
 }
 
+function getProduct(type) {
+  return random(Barn.get('productRage')[type])
+}
+
+// Add methods to Barn
+Barn.set('product', getProduct)
+Barn.set('productRage', productRange)
+
 class Animal {
   constructor(typeOfProduct) {
     if (Array.isArray(typeOfProduct) && !productRange[typeOfProduct[0]]) {
       productRange[typeOfProduct[0]] = typeOfProduct[1]
+      Barn.set('productRage', productRange)
     }
-
-    // Add methods to Barn
-    Barn.set('product', this.getProduct)
-    Barn.set('productRage', productRange)
 
     this.typeOfProduct = Array.isArray(typeOfProduct) ? typeOfProduct[0] : typeOfProduct
     this.id = Barn.size
-  }
-
-  getProduct(type) {
-    return random(Barn.get('productRage')[type])
   }
 
   save() {
@@ -61,7 +62,8 @@ function collectProducts() {
     !products[typeOfProduct] ? products[typeOfProduct] = product : products[typeOfProduct] += product;
   }
 
-  console.log(`Eggs: ${products.egg}\nLiters of milk: ${products.milk}`)
+  const log = Object.entries(products).map(([name, val]) => `${name}: ${val}`).join('\n')
+  console.log(log)
 }
 
 addDefaultAnimals()
