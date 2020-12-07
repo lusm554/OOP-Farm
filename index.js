@@ -1,12 +1,31 @@
 const Barn = new Map()
 
+// Default products are already set
+let productRange = {
+  milk: [8, 12],
+  egg: [0, 1]
+}
+
+function random([min, max]) {
+  return parseInt(Math.random() * (max - min + 1) + min)
+}
+
 class Animal {
-  constructor(id) {
-    this.id = id
+  constructor(typeOfProduct) {
+    if (Array.isArray(typeOfProduct) && !productRange[typeOfProduct[0]]) {
+      productRange[typeOfProduct[0]] = typeOfProduct[1]
+    }
+
+    // Add methods to Barn
+    Barn.set('product', this.getProduct)
+    Barn.set('productRage', productRange)
+
+    this.typeOfProduct = Array.isArray(typeOfProduct) ? typeOfProduct[0] : typeOfProduct
+    this.id = Barn.size
   }
 
-  random(min, max) {
-    return parseInt(Math.random() * (max - min + 1) + min)
+  getProduct(type) {
+    return random(Barn.get('productRage')[type])
   }
 
   save() {
@@ -15,30 +34,10 @@ class Animal {
       throw new Error('Animal id already exist.')
     }
 
-    Barn.set(this.id, this)
-    return this
-  }
-}
+    const typeOfProduct = this.typeOfProduct
+    const id = this.id
 
-class Chicken extends Animal {
-  constructor(id) {
-    super(id)
-    this.type = 'chicken'
-  }
-
-  getProduct() {
-    return this.random(0, 1)
-  }
-}
-
-class Cow extends Animal {
-  constructor(id) {
-    super(id)
-    this.type = 'cow'
-  }
-
-  getProduct() {
-    return this.random(8, 12)
+    Barn.set(id, { id, typeOfProduct })
   }
 }
 
@@ -46,26 +45,23 @@ class Cow extends Animal {
 function addDefaultAnimals() {
   for(let i = 0; i < 20; i++) {
     if (i%2 === 0) {
-      new Cow(Barn.size).save()
+      new Animal('milk').save()
     }
-    new Chicken(Barn.size).save()
+    new Animal('egg').save()
   }
 }
 
 function collectProducts() {
-  let eggs = 0, litersOfMilk = 0;
+  let products = {}
 
-  for(let [id, animal] of Barn.entries()) {
-    const product = animal.getProduct()
+  for(let { id, typeOfProduct } of Barn.values()) {
+    if (!id) continue;
+    const product = Barn.get('product')(typeOfProduct)
 
-    if (animal.type === 'cow') {
-      litersOfMilk += product
-    } else {
-      eggs += product
-    }
+    !products[typeOfProduct] ? products[typeOfProduct] = product : products[typeOfProduct] += product;
   }
-  
-  console.log(`Eggs: ${eggs}\nLiters of milk: ${litersOfMilk}`)
+
+  console.log(`Eggs: ${products.egg}\nLiters of milk: ${products.milk}`)
 }
 
 addDefaultAnimals()
