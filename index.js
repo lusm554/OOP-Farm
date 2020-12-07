@@ -20,6 +20,8 @@ Barn.set('productRage', productRange)
 
 class Animal {
   constructor(typeOfProduct) {
+
+    // Add type if it doesn't already exist
     if (Array.isArray(typeOfProduct) && !productRange[typeOfProduct[0]]) {
       productRange[typeOfProduct[0]] = typeOfProduct[1]
       Barn.set('productRage', productRange)
@@ -57,8 +59,9 @@ function collectProducts() {
 
   for(let { id, typeOfProduct } of Barn.values()) {
     if (!id) continue;
-    const product = Barn.get('product')(typeOfProduct)
 
+    // Animal product
+    const product = Barn.get('product')(typeOfProduct)
     !products[typeOfProduct] ? products[typeOfProduct] = product : products[typeOfProduct] += product;
   }
 
